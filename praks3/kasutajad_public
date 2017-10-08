@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+kasutaja=$1
+for kasutaja in $(ls /home)
+do
+ls /home/$kasutaja | grep public > /dev/null
+if [ $? -eq 1 ]; then
+mkdir /home/$kasutaja /public && chown -R $kasutaja :$kasutaja /home/$kasutaja /public && chmod 751 /home/$kasutaja /public
+if [ $? -eq 0 ]; then
+echo "Kasutaja nimega $kasutaja kodukaustas public loodud"
+ls -la /home/$kasutajanimi
+else
+echo "Probleem kasutaja $kasutaja public lisamisega"
+echo "Probleemi kood on $?"
+fi
+else "Kasutaja nimega $kasutaja kodukaustas public olemas"
+fi
+done
