@@ -1,0 +1,20 @@
+#!/bin/bash
+# 
+# kasutaja lisamise skript
+#
+# võime lisada ka kasutusjuhendi, kui midagi valesti käivitame või unustame kasutajanimi edasi anda
+if [ $# -ne 1 ]; then
+    echo "Kasutusjuhend: $0 kasutajanimi"	
+else
+  kasutajanimi=$1 
+  # kasutame kasutaja lisamise käsk vajalikute võtmetega
+  useradd $kasutajanimi -m -s /bin/bash
+  if [ $? -eq 0 ]; then
+    echo "Kasutaja nimega $kasutajanimi on lisatud süsteemi"
+    cat /etc/passwd | grep $kasutajanimi
+    ls -la /home/$kasutajanimi
+  else
+    echo "probleem kasutaja $kasutajanimi lisamisega"
+    echo "probleemi kood on $?"
+  fi
+fi
