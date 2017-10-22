@@ -1,0 +1,21 @@
+#!/bin/bash
+#echo 'Sisesta nimi keda uurida'
+cat /etc/passwd | grep /home | cut -d: -f1 > kasutajad
+while IFS= read line
+do
+nimi=$(echo "$line")
+if [ -f /home/$nimi/.my.cnf ]
+then
+	echo 'Fail olemas' $nimi
+else
+	echo 'Faili pole  kasutajal' $nimi
+	pass=$(pwgen -s 10 1)	
+	echo 'Loon faili kasutajale' $nimi
+	printf "[client]\nuser=$nimi\npassword=$pass\n" > /home/$nimi/.my.cnf 
+	mysql -e "CREATE DATABASE ${nimi}"
+	mysql -e "CREATE USER ${nimi}@localhost IDENTIFIED BY '${pass}';"
+        mysql -e "GRANT ALL PRIVILEGES ON * . * TO '${nimi}'@'localhost';"
+        mysql -e "FLUSH PRIVILEGES;"
+
+fi
+done < kasutajad
